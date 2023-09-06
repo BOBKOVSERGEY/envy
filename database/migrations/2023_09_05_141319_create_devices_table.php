@@ -13,10 +13,22 @@ return new class extends Migration
     {
         Schema::create('devices', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignUlid('user_id')
+
+            $table->string('name');
+            $table->string('type');
+            $table->string('os');
+            $table->string('architecture');
+            $table->string('identifier');
+
+            $table->boolean('default')->default(false);
+
+            $table
+                ->foreignUlid('user_id')
                 ->index()
                 ->constrained()
                 ->cascadeOnDelete();
+
+            $table->timestamp('synced_at')->nullable();
             $table->timestamps();
         });
     }

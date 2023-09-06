@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Devices;
 use App\Http\Requests\Devices\RegisterRequest;
 use App\Jobs\Devices\RegisterNewDeviceForUser;
 use Illuminate\Contracts\Auth\Authenticatable;
+use JustSteveKing\Tools\Http\Enums\Status;
+use Treblle\ApiResponses\Responses\MessageResponse;
 
 final readonly class RegisterController
 {
@@ -16,15 +18,17 @@ final readonly class RegisterController
     {
 
     }
-    public function __invoke(RegisterRequest $request)
+    public function __invoke(RegisterRequest $request): MessageResponse
     {
         // validate
         dispatch(new RegisterNewDeviceForUser(
-            user: $this->auth->getAuthIdentifierName(),
+            user: $this->auth->getAuthIdentifier(),
             device: $request->payload()
         ));
-        return response()->json([
-            'data' => 'We are processing your request'
-        ]);
+
+        return new MessageResponse(
+          data: 'We are processing your request',
+          status:  Status::ACCEPTED
+        );
     }
 }

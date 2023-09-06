@@ -12,7 +12,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('shell_configs', function (Blueprint $table) {
-            $table->id();
+            $table->ulid('id')->primary();
+
+            $table->json('data')->nullable();
+
+            $table
+                ->foreignUlid('device_id')
+                ->index()
+                ->constrained()
+                ->cascadeOnDelete();
+
+            $table
+                ->foreignUlid('shell_id')
+                ->index()
+                ->constrained()
+                ->cascadeOnDelete();
+
             $table->timestamps();
         });
     }
